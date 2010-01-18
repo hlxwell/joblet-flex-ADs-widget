@@ -1,0 +1,43 @@
+/* CSS file */
+
+.title
+{
+	color: white;
+	fontFamily: Arial;
+	fontSize: 15;
+	fontWeight: bold;
+}
+
+.htmlLink
+{
+	paddingLeft: 0px;
+    fontSize: 13;
+    fontWeight: bold;
+    text-decoration:none;
+}
+
+.htmlLinkHover
+{
+	paddingLeft: 0px;
+    fontSize: 13;
+    fontWeight: bold;
+    text-decoration:underline;
+    skin: ClassReference(null);
+}
+
+.htmlLink1
+{
+	paddingLeft: 0px;
+    fontSize: 12;
+    fontWeight: normal;
+    text-decoration:none;
+}
+
+.htmlLinkHover1
+{
+	paddingLeft: 0px;
+    fontSize: 12;
+    fontWeight: normal;
+    text-decoration:underline;
+    skin: ClassReference(null);
+}

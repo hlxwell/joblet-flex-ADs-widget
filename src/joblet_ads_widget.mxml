@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute" 
+	initialize="onLoad(event)"
+	xmlns:local="*"
+    backgroundColor="#ffffff" backgroundGradientColors="#ffffff, #ffffff">
+    <mx:Style source="style.css"/>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.listClasses.TileBase;
+			import mx.events.ListEvent;
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable]
+            private var jobs:ArrayCollection = new ArrayCollection();
+
+			[Bindable]
+			private var wordWidth:int;
+			
+			private var jobletHomeURL:String = "";
+			private var FrameColor:String = "#000000";
+			private var TitleWordColor:String = "#ffffff";
+			private var ContentWordColor:String = "#00ff00"; 
+			private var ContentBgColor:String = "#cccccc";
+
+			private function onLoad(event:Event):void {
+				setColor();
+				var params:Object = new Object();
+                params.limit = '100';
+                jobService.send(params);
+			}
+
+			private function setColor():void {
+				titleFrame.setStyle("backgroundColor", FrameColor);
+				title.setStyle("color", TitleWordColor);
+				jobList.setStyle("backgroundColor", ContentBgColor);
+				footFrame.setStyle("backgroundColor", ContentBgColor);
+				footFrame.setStyle("color", ContentWordColor);
+			}
+
+			private function onDataResponse(event:ResultEvent):void {
+				var miniWidth:int = 280;
+				jobs = event.result.jobs.job as ArrayCollection;
+				// set home link and title words
+				jobletHomeURL = event.result.jobs.link_to_home;
+				title.text = event.result.jobs.job_board_name;
+
+				if(stage != null) {
+					if(stage.width > miniWidth && stage.width <= 600) {
+						jobList.columnWidth = stage.width;
+						jobList.columnCount = 1;
+					} else if(stage.width > 600 && stage.width <= 900) {
+						jobList.columnWidth = stage.width/2;
+						jobList.columnCount = 2;
+					} else if(stage.width <= miniWidth) {						
+						jobList.columnWidth = miniWidth;
+						jobList.columnCount = 1;
+					} else if(stage.width > 900) {
+						jobList.columnWidth = stage.width/3;
+						jobList.columnCount = 3;
+					}
+					trace(stage.width.toString() + "," + jobList.columnWidth.toString());
+				}
+			}
+
+			private function pageUp(event:MouseEvent):void {
+				if(jobList.verticalScrollPosition > 0){
+					jobList.verticalScrollPosition -= 1; //-= jobList.rowCount;
+				}
+				trace(jobList.verticalScrollPosition);
+			}
+
+			private function pageDown(event:MouseEvent):void {
+				if(jobList.maxVerticalScrollPosition > jobList.verticalScrollPosition){
+					jobList.verticalScrollPosition += 1; //+= jobList.rowCount;
+				}
+				trace(jobList.verticalScrollPosition);
+			}
+
+			private function gotoJobletHome(event:MouseEvent):void {
+				if(jobletHomeURL != "") {
+					navigateToURL( new URLRequest( jobletHomeURL ), "_blank" );
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="jobService" url="http://localhost:3000/blogs/1/jobs.xml" result="onDataResponse(event)" />
+
+	<mx:VBox width="100%" height="100%" left="0" top="0" verticalGap="0" borderColor="#FFFFFF">
+		<mx:VBox id="titleFrame" width="100%" verticalAlign="middle" height="30">
+			<mx:Label id="title" text="Job Board" styleName="title" paddingLeft="10" paddingTop="2"/>
+		</mx:VBox>
+
+		<mx:TileList id="jobList"
+			dataProvider="{jobs}" selectable="false"
+			width="100%" height="100%"
+		    borderThickness="0"
+		    columnWidth="280"
+		    horizontalScrollPolicy="off"
+		    verticalScrollPolicy="off">
+			<mx:itemRenderer>
+				<mx:Component>
+					<local:widget_item job="{data}"/>
+	            </mx:Component>
+			</mx:itemRenderer>
+		</mx:TileList>
+
+		<mx:VBox id="footFrame" width="100%">
+			<mx:LinkButton id="linkToHome"
+				label="See more jobs on AMN Job Board"
+				left="0" bottom="0"
+				styleName="htmlLink1"
+			    click="gotoJobletHome(event)"
+				rollOver="linkToHome.styleName='htmlLinkHover1';"
+		        rollOut="linkToHome.styleName='htmlLink1';"/>
+	    </mx:VBox>
+	</mx:VBox>
+	
+
+	<!-- page button -->
+	<mx:LinkButton label="^" top="31" right="0" fontSize="16" click="pageUp(event)"/>
+	<mx:LinkButton label="v" bottom="0" right="0" fontSize="16" click="pageDown(event)"/>
+</mx:Application>

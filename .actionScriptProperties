@@ -10,6 +10,7 @@
 </compiler>
 <applications>
 <application path="joblet_ads_widget.mxml"/>
+<application path="aaa.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

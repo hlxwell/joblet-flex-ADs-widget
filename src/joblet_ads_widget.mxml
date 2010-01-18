@@ -3,7 +3,7 @@
 	layout="absolute" 
 	initialize="onLoad(event)"
 	xmlns:local="*"
-    backgroundColor="#ffffff" backgroundGradientColors="#ffffff, #ffffff">
+    backgroundColor="#ffffff" backgroundGradientColors="#ffffff, #ffffff" viewSourceURL="srcview/index.html">
     <mx:Style source="style.css"/>
 	<mx:Script>
 		<![CDATA[
@@ -16,14 +16,12 @@
 			[Bindable]
             private var jobs:ArrayCollection = new ArrayCollection();
 
-			[Bindable]
-			private var wordWidth:int;
-			
 			private var jobletHomeURL:String = "";
 			private var FrameColor:String = "#000000";
 			private var TitleWordColor:String = "#ffffff";
-			private var ContentWordColor:String = "#00ff00"; 
-			private var ContentBgColor:String = "#cccccc";
+			private var ContentBgColor:String = "#ffffff";
+			private var ContentWordColor:String = "#000000";
+			private var miniWidth:int = 280;
 
 			private function onLoad(event:Event):void {
 				setColor();
@@ -41,8 +39,8 @@
 			}
 
 			private function onDataResponse(event:ResultEvent):void {
-				var miniWidth:int = 280;
-				jobs = event.result.jobs.job as ArrayCollection;
+				var new_jobs:ArrayCollection = new ArrayCollection();
+				var wordWidth:int = 200;	
 				// set home link and title words
 				jobletHomeURL = event.result.jobs.link_to_home;
 				title.text = event.result.jobs.job_board_name;
@@ -51,18 +49,35 @@
 					if(stage.width > miniWidth && stage.width <= 600) {
 						jobList.columnWidth = stage.width;
 						jobList.columnCount = 1;
+
+						wordWidth = stage.width*0.70;
 					} else if(stage.width > 600 && stage.width <= 900) {
 						jobList.columnWidth = stage.width/2;
 						jobList.columnCount = 2;
+
+						wordWidth = (stage.width/2)*0.70;
 					} else if(stage.width <= miniWidth) {						
 						jobList.columnWidth = miniWidth;
 						jobList.columnCount = 1;
+
+						wordWidth = stage.width*0.70;
 					} else if(stage.width > 900) {
 						jobList.columnWidth = stage.width/3;
 						jobList.columnCount = 3;
+
+						wordWidth = (stage.width/3)*0.70;
 					}
-					trace(stage.width.toString() + "," + jobList.columnWidth.toString());
 				}
+
+				for each (var j:Object in event.result.jobs.job as ArrayCollection) {
+					j.wordColor = ContentWordColor;
+					j.miniWidth = miniWidth;
+					j.wordWidth = wordWidth;
+					new_jobs.addItem(j);
+				}
+				jobs = new_jobs;
+
+				trace(stage.width.toString() + "," + jobList.columnWidth.toString());
 			}
 
 			private function pageUp(event:MouseEvent):void {
@@ -89,9 +104,9 @@
 
 	<mx:HTTPService id="jobService" url="http://localhost:3000/blogs/1/jobs.xml" result="onDataResponse(event)" />
 
-	<mx:VBox width="100%" height="100%" left="0" top="0" verticalGap="0" borderColor="#FFFFFF">
+	<mx:VBox width="100%" height="100%" left="0" top="0" verticalGap="0">
 		<mx:VBox id="titleFrame" width="100%" verticalAlign="middle" height="30">
-			<mx:Label id="title" text="Job Board" styleName="title" paddingLeft="10" paddingTop="2"/>
+			<mx:Label id="title" text="" styleName="title" paddingLeft="10" paddingTop="2"/>
 		</mx:VBox>
 
 		<mx:TileList id="jobList"

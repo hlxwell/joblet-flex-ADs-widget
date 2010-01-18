@@ -5,30 +5,21 @@
 	<mx:Script>
 		<![CDATA[
 			public var job:Object = new Object();
-			
-			private function onLoad(event:Event):void {
-				var miniWidth:int = 280;
-				var width:int = 200;
 
+			private function onLoad(event:Event):void {
 				if(job != null) {
 					jobTitle.label = job.title;
 					jobSalary.text = job.salary;
 					jobCompany.label = job.company;
-					jobImage.source = job.image_widget_path;
-					
-					if(stage.width > miniWidth && stage.width <= 600) {
-						width = stage.width*0.70;
-					} else if(stage.width > 600 && stage.width <= 900) {
-						width = (stage.width/2)*0.70;
-					} else if(stage.width <= miniWidth) {						
-						width = stage.width*0.70;
-					} else if(stage.width > 900) {
-						width = (stage.width/3)*0.70;
-					}
+					jobImage.source = job.image_widget_path;				
 
-					jobTitle.width = width;
-					jobSalary.width = width;
-					jobCompany.width = width;
+					jobTitle.width = job.wordWidth;
+					jobSalary.width = job.wordWidth;
+					jobCompany.width = job.wordWidth;
+					
+					jobTitle.setStyle("color", job.wordColor);
+					jobSalary.setStyle("color", job.wordColor);
+					jobCompany.setStyle("color", job.wordColor);					
 				}
 			}
 

@@ -211,7 +211,6 @@
 		<mx:VBox id="titleFrame" width="100%" verticalAlign="middle" height="30">
 			<mx:Label id="title" text="Job Board" styleName="title" paddingLeft="10" paddingTop="2"/>
 		</mx:VBox>
-		
 		<mx:TileList id="jobList"
 			dataProvider="{jobs}" selectable="false"
 			width="100%"

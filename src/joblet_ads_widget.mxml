@@ -101,6 +101,8 @@
 				jobList.setStyle("backgroundColor", ContentBgColor);
 				footFrame.setStyle("backgroundColor", ContentBgColor);
 				footFrame.setStyle("color", ContentWordColor);
+				upArrow.setStyle("color", ContentWordColor);
+				downArrow.setStyle("color", ContentWordColor);
 				this.setStyle("borderColor", FrameColor);
 			}
 
@@ -219,8 +221,8 @@
 	</mx:VBox>
 
 	<!-- page button -->
-	<mx:LinkButton label="▲" top="31" right="1" click="pageUp(event)" styleName="arrow"/>
-	<mx:LinkButton label="▼" bottom="1" right="1" click="pageDown(event)" styleName="arrow"/>
+	<mx:LinkButton label="▲" top="31" right="1" click="pageUp(event)" styleName="arrow" id="upArrow"/>
+	<mx:LinkButton label="▼" bottom="1" right="1" click="pageDown(event)" styleName="arrow" id="downArrow"/>
 	
 	<mx:SWFLoader id="loadingBar" source="loading.swf" top="40" left="10"/>
 </mx:Application>

@@ -83,7 +83,7 @@
 			private function sendRequest():void {
 				var request_params:Object = new Object();
                 request_params.limit = '100';
-                jobService.url = "http://job.agilemedia.jp/blogs/1/ja/jobs.xml";
+                jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/ja/jobs.xml";
 //                jobService.url = params.service_url;
                 jobService.send(request_params);
 			}
@@ -151,6 +151,12 @@
 						j.wordWidth = wordWidth;
 						new_jobs.addItem(j);
 					}
+				} else if(event.result.jobs.job != null) {
+					var jj:Object = event.result.jobs.job;
+					jj.wordColor = ContentWordColor;
+					jj.miniWidth = miniWidth;
+					jj.wordWidth = wordWidth;
+					new_jobs.addItem(jj);
 				}
 				
 				jobs = new_jobs;				

@@ -83,8 +83,8 @@
 			private function sendRequest():void {
 				var request_params:Object = new Object();
                 request_params.limit = '100';
-//                jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
-                jobService.url = params.service_url;
+                jobService.url = "http://job.agilemedia.jp/blogs/1/ja/jobs.xml";
+//                jobService.url = params.service_url;
                 jobService.send(request_params);
 			}
 
@@ -141,19 +141,31 @@
 					jobList.rowCount = (stage.height - 55) / 85;
 				}
 
-				// add property to job object
-				for each (var j:Object in event.result.jobs.job as ArrayCollection) {
-					j.wordColor = ContentWordColor;
-					j.miniWidth = miniWidth;
-					j.wordWidth = wordWidth;
-					new_jobs.addItem(j);
+				if(event.result.jobs.job == null) {
+					showNoRecord();
+				} else if(event.result.jobs.job is ArrayCollection) {
+					// add property to job object
+					for each (var j:Object in event.result.jobs.job as ArrayCollection) {
+						j.wordColor = ContentWordColor;
+						j.miniWidth = miniWidth;
+						j.wordWidth = wordWidth;
+						new_jobs.addItem(j);
+					}
 				}
-
+				
 				jobs = new_jobs;				
 				loadingBar.visible = false;
 				trace(stage.width.toString() + "," + jobList.columnWidth.toString() + "," + jobList.columnCount.toString());
 			}
 
+			private function showNoRecord():void {
+				if(stage != null) {
+					noRecord.setStyle("left", stage.width/2 - 70);
+					noRecord.setStyle("top", stage.height/2 - 15);
+					noRecord.visible = true;
+				}
+			}
+			
 			private function gotoJobletHome(event:MouseEvent):void {
 				if(jobletHomeURL != "") {
 					navigateToURL( new URLRequest( jobletHomeURL ), "_blank" );
@@ -223,6 +235,6 @@
 	<!-- page button -->
 	<mx:LinkButton label="▲" top="31" right="1" click="pageUp(event)" styleName="arrow" id="upArrow"/>
 	<mx:LinkButton label="▼" bottom="1" right="1" click="pageDown(event)" styleName="arrow" id="downArrow"/>
-	
+	<mx:Label id="noRecord" text="No Jobs Yet!" styleName="title" color="red" visible="false"/>
 	<mx:SWFLoader id="loadingBar" source="loading.swf" top="40" left="10"/>
 </mx:Application>

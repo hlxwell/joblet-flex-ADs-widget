@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" height="100"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" height="80"
     initialize="onLoad(event)">
     <mx:Style source="style.css"/>
 	<mx:Script>
@@ -52,5 +52,5 @@
 	            rollOut="jobCompany.styleName='htmlLink1';"/>
 		</mx:VBox>
 	</mx:HBox>
-	<mx:HRule width="100%" height="1" />
+	<mx:HRule width="100%" height="1"/>
 </mx:VBox>

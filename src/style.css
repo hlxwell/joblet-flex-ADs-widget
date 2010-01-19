@@ -11,7 +11,7 @@
 .htmlLink
 {
 	paddingLeft: 0px;
-    fontSize: 13;
+    fontSize: 14;
     fontWeight: bold;
     text-decoration:none;
 }
@@ -19,7 +19,7 @@
 .htmlLinkHover
 {
 	paddingLeft: 0px;
-    fontSize: 13;
+    fontSize: 14;
     fontWeight: bold;
     text-decoration:underline;
     skin: ClassReference(null);
@@ -28,7 +28,7 @@
 .htmlLink1
 {
 	paddingLeft: 0px;
-    fontSize: 12;
+    fontSize: 11;
     fontWeight: normal;
     text-decoration:none;
 }
@@ -36,7 +36,7 @@
 .htmlLinkHover1
 {
 	paddingLeft: 0px;
-    fontSize: 12;
+    fontSize: 11;
     fontWeight: normal;
     text-decoration:underline;
     skin: ClassReference(null);

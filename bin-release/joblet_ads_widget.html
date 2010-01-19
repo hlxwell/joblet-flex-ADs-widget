@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>${title}</title>
+<title></title>
 <script src="AC_OETags.js" language="javascript"></script>
 <style>
 body { margin: 0px; overflow:hidden }
@@ -12,11 +12,11 @@ body { margin: 0px; overflow:hidden }
 // -----------------------------------------------------------------------------
 // Globals
 // Major version of Flash required
-var requiredMajorVersion = ${version_major};
+var requiredMajorVersion = 9;
 // Minor version of Flash required
-var requiredMinorVersion = ${version_minor};
+var requiredMinorVersion = 0;
 // Minor version of Flash required
-var requiredRevision = ${version_revision};
+var requiredRevision = 124;
 // -----------------------------------------------------------------------------
 // -->
 </script>
@@ -46,13 +46,13 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	AC_FL_RunContent(
 		"src", "playerProductInstall",
 		"FlashVars", "MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
-		"width", "${width}",
-		"height", "${height}",
+		"width", "100%",
+		"height", "100%",
 		"align", "middle",
-		"id", "${application}",
+		"id", "joblet_ads_widget",
 		"quality", "high",
-		"bgcolor", "${bgcolor}",
-		"name", "${application}",
+		"bgcolor", "#000000",
+		"name", "joblet_ads_widget",
 		"allowScriptAccess","sameDomain",
 		"type", "application/x-shockwave-flash",
 		"pluginspage", "http://www.adobe.com/go/getflashplayer"
@@ -61,14 +61,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	// if we've detected an acceptable version
 	// embed the Flash Content SWF when all tests are passed
 	AC_FL_RunContent(
-			"src", "${swf}",
-			"width", "${width}",
-			"height", "${height}",
+			"src", "joblet_ads_widget",
+			"width", "100%",
+			"height", "100%",
 			"align", "middle",
-			"id", "${application}",
+			"id", "joblet_ads_widget",
 			"quality", "high",
-			"bgcolor", "${bgcolor}",
-			"name", "${application}",
+			"bgcolor", "#000000",
+			"name", "joblet_ads_widget",
 			"allowScriptAccess","sameDomain",
 			"type", "application/x-shockwave-flash",
 			"pluginspage", "http://www.adobe.com/go/getflashplayer"
@@ -83,14 +83,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </script>
 <noscript>
   	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-			id="${application}" width="${width}" height="${height}"
+			id="joblet_ads_widget" width="100%" height="100%"
 			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-			<param name="movie" value="${swf}.swf" />
+			<param name="movie" value="joblet_ads_widget.swf" />
 			<param name="quality" value="high" />
-			<param name="bgcolor" value="${bgcolor}" />
+			<param name="bgcolor" value="#000000" />
 			<param name="allowScriptAccess" value="sameDomain" />
-			<embed src="${swf}.swf" quality="high" bgcolor="${bgcolor}"
-				width="${width}" height="${height}" name="${application}" align="middle"
+			<embed src="joblet_ads_widget.swf" quality="high" bgcolor="#000000"
+				width="100%" height="100%" name="joblet_ads_widget" align="middle"
 				play="true"
 				loop="false"
 				quality="high"

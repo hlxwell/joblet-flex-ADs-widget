@@ -158,7 +158,7 @@
 					jj.wordWidth = wordWidth;
 					new_jobs.addItem(jj);
 				}
-				
+
 				jobs = new_jobs;				
 				loadingBar.visible = false;
 				trace(stage.width.toString() + "," + jobList.columnWidth.toString() + "," + jobList.columnCount.toString());

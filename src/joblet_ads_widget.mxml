@@ -9,7 +9,7 @@
 	borderColor="#000000"
 	borderStyle="solid"
     verticalScrollPolicy="off" 
-    horizontalScrollPolicy="off">
+    horizontalScrollPolicy="off" xmlns:utils="flash.utils.*">
 
     <mx:Style>
     	.title {
@@ -50,9 +50,8 @@
 		}
 		
 		.arrow {
-			fontSize: 14;
-		    fontWeight: bold;
-			skin: ClassReference(null);
+			fontSize: 12;
+		    fontWeight: normal;
 		}
     </mx:Style>
 	<mx:Script>
@@ -70,11 +69,16 @@
 			private var TitleWordColor:String = "#ffffff";
 			private var ContentBgColor:String = "#ffffff";
 			private var ContentWordColor:String = "#000000";
-			private var miniWidth:int = 250;
-			private var wordWidth:int = 180;
+			private var miniWidth:int = 150;
+			private var wordWidth:int = 100;
+			private var imageWidth:int = 40;
+			private var imageVisibility:Boolean = true;			
 			private var params:Object = null;
 
 			private function onLoad(event:Event):void {
+				if(stage != null) {
+					Alert.show(this.width.toString());
+				}
 				params = Application.application.parameters;
 				setColor();
 				sendRequest();
@@ -83,7 +87,10 @@
 			private function sendRequest():void {
 				var request_params:Object = new Object();
                 request_params.limit = '100';
-//                jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/ja/jobs.xml";
+//jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/ja/jobs.xml";
+//jobService.url = "http://atom.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
+//jobService.url = "file:///Users/michael/Desktop/jobs.xml";
+//jobService.url = "http://localhost:3000/blogs/1/ja/jobs.xml";
                 jobService.url = params.service_url;
                 jobService.send(request_params);
 			}
@@ -112,29 +119,34 @@
 				// set home link and title words
 				jobletHomeURL = event.result.jobs.link_to_home;
 				title.text = event.result.jobs.job_board_name;
+				noRecord.text = event.result.jobs.no_record_text;
+				linkToHome.label = event.result.jobs.more_jobs_text;
 
 				if(stage != null) {
 					// decide the column count and width
 					if(stage.width > miniWidth && stage.width < 560) {
 						jobList.columnWidth = stage.width - 5;
 						jobList.columnCount = 1;
-
-						wordWidth = stage.width*0.60;
 					} else if(stage.width >= 560 && stage.width < 840) {
 						jobList.columnWidth = stage.width/2 - 5;
 						jobList.columnCount = 2;
-
-						wordWidth = (stage.width/2)*0.60;
 					} else if(stage.width <= miniWidth) {						
 						jobList.columnWidth = miniWidth - 5;
 						jobList.columnCount = 1;
-
-						wordWidth = stage.width*0.60;
 					} else if(stage.width >= 840) {
 						jobList.columnWidth = stage.width/3 - 5;
 						jobList.columnCount = 3;
+					}
 
-						wordWidth = (stage.width/3)*0.60;
+					miniWidth = jobList.columnWidth;
+					if(miniWidth > 185) {
+						imageWidth = miniWidth * 0.3;
+						wordWidth = miniWidth * 0.6;
+						imageVisibility = true;
+					} else {
+						imageWidth = 0;
+						wordWidth = miniWidth * 0.8;
+						imageVisibility = false;
 					}
 
 					// decide the row count
@@ -149,6 +161,8 @@
 						j.wordColor = ContentWordColor;
 						j.miniWidth = miniWidth;
 						j.wordWidth = wordWidth;
+						j.imageWidth = imageWidth;
+						j.imageVisibility = imageVisibility;
 						new_jobs.addItem(j);
 					}
 				} else if(event.result.jobs.job != null) {
@@ -156,36 +170,38 @@
 					jj.wordColor = ContentWordColor;
 					jj.miniWidth = miniWidth;
 					jj.wordWidth = wordWidth;
+					jj.imageWidth = imageWidth;
+					jj.imageVisibility = imageVisibility;
 					new_jobs.addItem(jj);
 				}
 
 				jobs = new_jobs;				
 				loadingBar.visible = false;
-				trace(stage.width.toString() + "," + jobList.columnWidth.toString() + "," + jobList.columnCount.toString());
 			}
 
 			private function showNoRecord():void {
 				if(stage != null) {
-					noRecord.setStyle("left", stage.width/2 - 70);
-					noRecord.setStyle("top", stage.height/2 - 15);
+					noRecord.setStyle("left", stage.width/2 - noRecord.width);
+					noRecord.setStyle("top", stage.height/2 - noRecord.height/2);
 					noRecord.visible = true;
 				}
 			}
 			
 			private function gotoJobletHome(event:MouseEvent):void {
 				if(jobletHomeURL != "") {
-					navigateToURL( new URLRequest( jobletHomeURL ), "_blank" );
+					navigateToURL( new URLRequest( jobletHomeURL ), "_self" );
 				}
 			}
 			
 			private function onDataFault(event:FaultEvent):void {
 				Alert.show(event.fault.faultString.toString(),"Widget Error!");
 			}
-			
+
 			// page up and page down
 			private function pageUp(event:MouseEvent):void {
-				if( (jobList.verticalScrollPosition - jobList.rowCount) < 0 ) {
+				if( (jobList.verticalScrollPosition - jobList.rowCount) <= 0 ) {
 					jobList.verticalScrollPosition =  0;
+					showFlashWord("Already First Page!");
 				} else {
 					jobList.verticalScrollPosition -= jobList.rowCount;
 				}
@@ -194,9 +210,14 @@
 			private function pageDown(event:MouseEvent):void {
 				if( (jobList.verticalScrollPosition + jobList.rowCount) > jobList.maxVerticalScrollPosition ) {
 					jobList.verticalScrollPosition = jobList.maxVerticalScrollPosition;
+					showFlashWord("Already Last Page!");
 				} else {
 					jobList.verticalScrollPosition += jobList.rowCount;
 				}
+			}
+			
+			private function showFlashWord(str:String):void {
+//				loadingBar.visible = true;
 			}
 		]]>
 	</mx:Script>
@@ -212,17 +233,18 @@
 			<mx:Label id="title" text="Job Board" styleName="title" paddingLeft="10" paddingTop="2"/>
 		</mx:VBox>
 		<mx:TileList id="jobList"
-			dataProvider="{jobs}" selectable="false"
+			dataProvider="{jobs}" 
+			selectable="false"
 			width="100%"
 			height="100%"
 		    direction="horizontal"
-		    columnWidth="280"
+		    columnWidth="150"
 		    borderThickness="0"
 		    verticalScrollPolicy="off"
 		    horizontalScrollPolicy="off">
 			<mx:itemRenderer>
 				<mx:Component>
-					<local:widget_item job="{data}"/>
+					<local:widget_item />
 	            </mx:Component>
 			</mx:itemRenderer>
 		</mx:TileList>

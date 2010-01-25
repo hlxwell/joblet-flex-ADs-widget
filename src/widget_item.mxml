@@ -1,50 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" height="80"
-     dataChange="onLoad(event)" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	height="80"
+    verticalScrollPolicy="off"
+    horizontalScrollPolicy="off">
 
 	<mx:Script>
 		<![CDATA[
-			public var job:Object = new Object();
-
-			private function onLoad(event:Event):void {
-				if(job.title != null) {
-					jobTitle.label = job.title;
-					jobSalary.text = job.salary;
-					jobCompany.label = job.company;
-					jobImage.source = job.image_widget_path;				
-
-					jobTitle.width = job.wordWidth;
-					jobSalary.width = job.wordWidth;
-					jobCompany.width = job.wordWidth;
-					
-					jobTitle.setStyle("color", job.wordColor);
-					jobSalary.setStyle("color", job.wordColor);
-					jobCompany.setStyle("color", job.wordColor);					
-				}
-			}
-
 			private function gotoCompany(event:Event):void {
-				navigateToURL( new URLRequest( job.link_to_company ), "_blank" );
+				navigateToURL( new URLRequest( data.link_to_company ), "_self" );
 			}
 
 			private function gotoJob(event:Event):void {
-				navigateToURL( new URLRequest( job.link_to_job ), "_blank" );
+				navigateToURL( new URLRequest( data.link_to_job ), "_self" );
 			}
 		]]>
 	</mx:Script>
+
 	<mx:HBox width="100%">
-		<mx:Image id="jobImage" width="25%" click="gotoCompany(event)"/>
-		<mx:VBox verticalGap="0" width="70%">
+		<mx:Image id="jobImage" click="gotoCompany(event)" width="{data.imageWidth}" visible="{data.imageVisibility}" source="{data.image_widget_path}"/>
+		<mx:VBox id="rightColumn" verticalGap="0">
 			<mx:LinkButton id="jobTitle"
-			    width="100%"
+			    width="{data.wordWidth}"
 				click="gotoJob(event)"
 			    textAlign="left"
+			    label="{data.title}"
+			    color="{data.wordColor}"
 				styleName="htmlLinkHover"/>
-			<mx:Label id="jobSalary" color="red" textAlign="left"/>
+			<mx:Label id="jobSalary"
+				width="{data.wordWidth}" 
+				color="{data.wordColor}"
+			    text="{data.salary}"
+				textAlign="left"/>
 			<mx:LinkButton id="jobCompany"
-			    width="100%"
+			    width="{data.wordWidth}"
+			    color="{data.wordColor}"
 				click="gotoCompany(event)"
 			    textAlign="left"
+			    label="{data.company}"
 				styleName="htmlLinkHover1"/>
 		</mx:VBox>
 	</mx:HBox>

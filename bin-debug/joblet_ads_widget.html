@@ -57,7 +57,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	AC_FL_RunContent(
 		"src", "playerProductInstall",
 		"FlashVars", "MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
-		"width", "100%",
+		"width", "180",
 		"height", "100%",
 		"align", "middle",
 		"id", "joblet_ads_widget",
@@ -73,7 +73,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	// embed the Flash Content SWF when all tests are passed
 	AC_FL_RunContent(
 			"src", "joblet_ads_widget",
-			"width", "100%",
+			"width", "180",
 			"height", "100%",
 			"align", "middle",
 			"id", "joblet_ads_widget",
@@ -94,14 +94,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </script>
 <noscript>
   	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-			id="joblet_ads_widget" width="100%" height="100%"
+			id="joblet_ads_widget" width="180" height="100%"
 			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
 			<param name="movie" value="joblet_ads_widget.swf" />
 			<param name="quality" value="high" />
 			<param name="bgcolor" value="#ffffff" />
 			<param name="allowScriptAccess" value="sameDomain" />
 			<embed src="joblet_ads_widget.swf" quality="high" bgcolor="#ffffff"
-				width="100%" height="100%" name="joblet_ads_widget" align="middle"
+				width="180" height="100%" name="joblet_ads_widget" align="middle"
 				play="true"
 				loop="false"
 				quality="high"

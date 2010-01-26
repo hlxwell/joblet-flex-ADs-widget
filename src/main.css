@@ -1,0 +1,41 @@
+.title {
+	color: white;
+	fontFamily: Arial;
+	fontSize: 15;
+	fontWeight: bold;
+}
+
+.htmlLink {
+	paddingLeft: 0px;
+    fontSize: 14;
+    fontWeight: bold;
+    text-decoration:none;
+}
+
+.htmlLinkHover {
+	paddingLeft: 0px;
+    fontSize: 14;
+    fontWeight: bold;
+    text-decoration:underline;
+    skin: ClassReference(null);
+}
+
+.htmlLink1 {
+	paddingLeft: 0px;
+    fontSize: 11;
+    fontWeight: normal;
+    text-decoration:none;
+}
+
+.htmlLinkHover1	{
+	paddingLeft: 0px;
+    fontSize: 11;
+    fontWeight: normal;
+    text-decoration:underline;
+    skin: ClassReference(null);
+}
+
+.arrow {
+	fontSize: 12;
+    fontWeight: normal;
+}

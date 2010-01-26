@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	height="80"
+	width="100%"
+	height="{data.itemHeight}"
     verticalScrollPolicy="off"
-    horizontalScrollPolicy="off">
+    horizontalScrollPolicy="off"
+    verticalGap="0">
 
 	<mx:Script>
 		<![CDATA[
@@ -17,15 +19,24 @@
 	</mx:Script>
 
 	<mx:HBox width="100%">
-		<mx:Image id="jobImage" click="gotoCompany(event)" width="{data.imageWidth}" visible="{data.imageVisibility}" source="{data.image_widget_path}"/>
+		<mx:Image id="jobImage" 
+			click="gotoCompany(event)" 
+			width="{data.imageWidth}" 
+			height="{data.imageHeight}"
+			visible="{data.imageVisibility}"
+			source="{data.image_widget_path}"/>
+
 		<mx:VBox id="rightColumn" verticalGap="0">
-			<mx:LinkButton id="jobTitle"
+			<mx:Text id="jobTitle"
 			    width="{data.wordWidth}"
 				click="gotoJob(event)"
 			    textAlign="left"
-			    label="{data.title}"
+			    htmlText="{data.title}"
 			    color="{data.wordColor}"
-				styleName="htmlLinkHover"/>
+				useHandCursor="true" 
+				buttonMode="true"
+		        mouseChildren="false"
+		        styleName="htmlLinkHover"/>
 			<mx:Label id="jobSalary"
 				width="{data.wordWidth}" 
 				color="{data.wordColor}"

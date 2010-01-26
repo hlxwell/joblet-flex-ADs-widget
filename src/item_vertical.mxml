@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	height="{data.itemHeight}"
     verticalScrollPolicy="off"
     horizontalScrollPolicy="off"
-    width="100%"
-    height="{data.itemHeight}"
-    dataChange="doData(event)"
     verticalGap="0">
 
 	<mx:Script>
 		<![CDATA[
-			private function doData(event:Event):void {
-				
-			}
-			
 			private function gotoCompany(event:Event):void {
 				navigateToURL( new URLRequest( data.link_to_company ), "_self" );
 			}
@@ -24,15 +19,17 @@
 	</mx:Script>
 
 	<mx:Image id="jobImage" 
-		click="gotoCompany(event)" 
+		click="gotoCompany(event)"
+		width="{data.imageWidth}"
 		height="{data.imageHeight}"
 		visible="{data.imageVisibility}" 
 		source="{data.image_widget_path}"/>
+
 	<mx:Text id="jobTitle"
 	    width="{data.wordWidth}"
 		click="gotoJob(event)"
 	    textAlign="left"
-	    text="{data.title}"
+	    htmlText="{data.title}"
 	    color="{data.wordColor}"
 		useHandCursor="true" 
 		buttonMode="true"

@@ -1,5 +1,3 @@
-import item.HorizontalItem;
-import item.VerticalItem;
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.rpc.events.FaultEvent;
@@ -17,9 +15,10 @@ private var miniWidth:int = 150;
 private var wordWidth:int = 100;
 private var imageWidth:String = "100%";
 private var imageHeight:String = "100%";
-private var itemHeight:int = 80;
 private var imageVisibility:Boolean = true;			
 private var params:Object = null;
+private var displayMode:String = "v";
+private var maxItemHeight:int = 80;
 
 private function onLoad(event:Event):void {
 	params = Application.application.parameters;
@@ -32,8 +31,8 @@ private function sendRequest():void {
     request_params.limit = '100';
     jobService.url = params.service_url;
 
-//	jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/ja/jobs.xml";
-	jobService.url = "http://localhost:3000/blogs/1/ja/jobs.xml";
+	jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
+//	jobService.url = "http://localhost:3000/blogs/1/ja/jobs.xml";
     jobService.send(request_params);
 }
 
@@ -42,7 +41,7 @@ private function onDataResponse(event:ResultEvent):void {
 	setWordsAndLinks(event.result.jobs);
 
 	// get the type of item (vertical or horizontal)
-	if(stage != null && stage.width > 200) {
+	if(stage != null && stage.width > 250) {
 		measureHorizontalItemSize();
 	} else {
 		measureVerticalItemSize();
@@ -51,77 +50,106 @@ private function onDataResponse(event:ResultEvent):void {
 	if(event.result.jobs.job == null) {
 		showNoRecord();
 	} else if(event.result.jobs.job is ArrayCollection) { // add property to job object		
-		for each (var j:Object in event.result.jobs.job as ArrayCollection) {			
+		for each (var j:Object in event.result.jobs.job as ArrayCollection) {
 			jobs.addItem(buildJob(j));
 		}
 	} else if(event.result.jobs.job != null) {		
 		jobs.addItem(buildJob(event.result.jobs.job));
 	}
 
-	loadingBar.visible = false;
-}
-
-private function buildJob(job:Object):Object {
-	if(job.image_widget_path == "missing.jpg") {
-		job.imageWidth = "0";
-		job.imageHeight = "0";
-		job.itemHeight = itemHeight;
-		imageVisibility = false;
-	} else {
-		job.imageWidth = imageWidth;
-		job.imageHeight = imageHeight;
-		job.itemHeight = 120;
-		imageVisibility = true;
+	for(var i:int = 0; i < jobs.length; i ++) {
+		jobs[i].itemHeight = maxItemHeight;
 	}
 
-	job.wordColor = ContentWordColor;
-	job.miniWidth = miniWidth;
-	job.wordWidth = wordWidth;
-	job.imageVisibility = imageVisibility;
-	
-	return job;
+	loadingBar.visible = false;
 }
 
 private function onDataFault(event:FaultEvent):void {
 	Alert.show(event.fault.faultString.toString(),"Widget Error!");
 }
 
+
+
+private function buildJob(job:Object):Object {
+	var hasPicture:Boolean = (job.image_widget_path != "missing.jpg");
+	var titleRowCount:int = 1;
+	var itemHeight:int = 80;
+	var imgHeight:int = parseInt(imageHeight);
+	var titleRowHeight:int = 10;
+	if(displayMode == "h") {
+		imgHeight = 0;
+	} else {
+		imgHeight = parseInt(imageHeight);
+	}
+
+	// total width - scrollbar / width
+	titleRowCount = Math.ceil(job.title.toString().length * 16/stage.width);
+
+	if(hasPicture) {
+		itemHeight = titleRowCount * titleRowHeight + 70 + imgHeight;
+		job.imageWidth = imageWidth;
+		job.imageHeight = imageHeight;
+		job.itemHeight = itemHeight;
+		imageVisibility = true;
+	} else {
+		itemHeight = titleRowCount * titleRowHeight + 70;
+		job.imageWidth = "0";
+		job.imageHeight = "0";
+		job.itemHeight = itemHeight;
+		imageVisibility = false;
+	}
+	if(itemHeight > maxItemHeight) {
+		maxItemHeight = itemHeight;
+	}
+	job.wordColor = ContentWordColor;
+	job.miniWidth = miniWidth;
+	job.wordWidth = wordWidth;
+	job.imageVisibility = imageVisibility;
+
+	return job;
+}
+
+
+
 private function measureVerticalItemSize():void {
 	trace("vertical");
-	
-	jobList.itemRenderer = new ClassFactory(VerticalItem);
+	displayMode = "v";
+
+	jobList.itemRenderer = new ClassFactory(item_vertical); //VerticalItem
 	jobList.columnCount = 1;
 	jobList.columnWidth = stage.width - 5;
 
 	miniWidth = jobList.columnWidth;
-	wordWidth = miniWidth;
+	wordWidth = miniWidth * 0.9;
 
-//	imageWidth = "100";
+	imageWidth = "100%";
 	imageHeight = "40";
 
-	// decide the row count
-	trace(stage.height);
-//	jobList.rowCount = (stage.height - 55) / 100;
-	trace(jobList.rowCount);
+	// decide the row count	
+//	if(displayMode == "h") {
+//		jobList.rowCount = (stage.height - 55) / 100;
+//	}
 }
+
 
 private function measureHorizontalItemSize():void {	
 	trace("horizontal");
+	displayMode = "h";
 
-	jobList.itemRenderer = new ClassFactory(HorizontalItem);
+	jobList.itemRenderer = new ClassFactory(item_horizontal); // HorizontalItem
 	
 	// decide the column count and width
 	if(stage.width > miniWidth && stage.width < 560) {
-		jobList.columnWidth = stage.width - 5;
+		jobList.columnWidth = stage.width - 10;
 		jobList.columnCount = 1;
 	} else if(stage.width >= 560 && stage.width < 840) {
-		jobList.columnWidth = stage.width/2 - 5;
+		jobList.columnWidth = stage.width/2 - 10;
 		jobList.columnCount = 2;
 	} else if(stage.width <= miniWidth) {						
-		jobList.columnWidth = miniWidth - 5;
+		jobList.columnWidth = miniWidth - 10;
 		jobList.columnCount = 1;
 	} else if(stage.width >= 840) {
-		jobList.columnWidth = stage.width/3 - 5;
+		jobList.columnWidth = stage.width/3 - 10;
 		jobList.columnCount = 3;
 	}
 
@@ -129,11 +157,19 @@ private function measureHorizontalItemSize():void {
 	wordWidth = miniWidth * 0.6;
 
 	imageWidth = (miniWidth * 0.3).toString();
-//	imageHeight = 20;
+	imageHeight = "100%";
 	
-	// decide the row count
-	jobList.rowCount = (stage.height - 55) / 85;
+	// decide the row count	
+//	if(displayMode == "h") {
+//		jobList.rowCount = (stage.height - 55) / 100;
+//	}
 }
+
+
+
+
+
+
 
 
 

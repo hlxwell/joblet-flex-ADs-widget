@@ -3,7 +3,7 @@
 	layout="absolute"
     creationComplete="onLoad(event)"
 	xmlns:local="*"
-	width="180"
+	width="580"
     backgroundColor="#ffffff"
     backgroundGradientColors="#ffffff, #ffffff"
 	borderThickness="1" 
@@ -12,8 +12,10 @@
     verticalScrollPolicy="off" 
     horizontalScrollPolicy="off" 
     xmlns:utils="flash.utils.*">
-    <mx:Style source="main.css" />
+
+    <mx:Style source="css/main.css" />
 	<mx:Script source="main.as" />
+
 	<mx:HTTPService id="jobService" result="onDataResponse(event)" fault="onDataFault(event)"/>
 
 	<mx:VBox id="frame" 
@@ -33,18 +35,13 @@
 		    direction="horizontal"
 		    columnWidth="150"
 		    borderThickness="0"
-		    verticalScrollPolicy="off"
+		    verticalScrollPolicy="auto"
 		    horizontalScrollPolicy="off">
-			<mx:itemRenderer>
-				<mx:Component>
-					<local:item_vertical />
-	            </mx:Component>
-			</mx:itemRenderer>
 		</mx:TileList>
 
 		<mx:VBox id="footFrame" width="100%" verticalAlign="bottom">
 			<mx:LinkButton id="linkToHome"
-				label="More jobs on AMN Job Board"
+				label="See all jobs"
 				styleName="htmlLinkHover1"
 			    paddingLeft="5"
 			    paddingTop="5"
@@ -52,9 +49,11 @@
 	    </mx:VBox>
 	</mx:VBox>
 
-	<!-- page button -->
+	<!-- page button 
 	<mx:LinkButton label="▲" top="31" right="1" click="pageUp(event)" styleName="arrow" id="upArrow"/>
 	<mx:LinkButton label="▼" bottom="1" right="1" click="pageDown(event)" styleName="arrow" id="downArrow"/>
+	-->
+	
 	<mx:Label id="noRecord" text="No Jobs Yet!" styleName="title" color="red" visible="false"/>
 	<mx:SWFLoader id="loadingBar" source="loading.swf" top="40" left="10"/>
 </mx:Application>

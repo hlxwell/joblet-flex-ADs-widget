@@ -1,3 +1,5 @@
+import item.HorizontalItem;
+import item.VerticalItem;
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.rpc.events.FaultEvent;
@@ -30,43 +32,14 @@ private function sendRequest():void {
     request_params.limit = '100';
     jobService.url = params.service_url;
 
-	//jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/ja/jobs.xml";
-	//jobService.url = "http://atom.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
-	//jobService.url = "file:///Users/michael/Desktop/jobs.xml";
+//	jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/ja/jobs.xml";
 	jobService.url = "http://localhost:3000/blogs/1/ja/jobs.xml";
     jobService.send(request_params);
 }
 
-private function setColor():void {
-	if(params.frame_color != null) {
-		FrameColor = params.frame_color;
-		TitleWordColor = params.title_color;
-		ContentBgColor = params.content_bg_color;
-		ContentWordColor = params.content_color;
-	}
-
-	titleFrame.setStyle("backgroundColor", FrameColor);
-	title.setStyle("color", TitleWordColor);
-	jobList.setStyle("backgroundColor", ContentBgColor);
-	footFrame.setStyle("backgroundColor", ContentBgColor);
-	footFrame.setStyle("color", ContentWordColor);
-	upArrow.setStyle("color", ContentWordColor);
-	downArrow.setStyle("color", ContentWordColor);
-	this.setStyle("borderColor", FrameColor);
-}
-
-
-
-
-
 private function onDataResponse(event:ResultEvent):void {
-	var new_jobs:ArrayCollection = new ArrayCollection();
-
 	// set home link and title words
-	jobletHomeURL = event.result.jobs.link_to_home;
-	title.text = event.result.jobs.job_board_name;
-	noRecord.text = event.result.jobs.no_record_text;
-	linkToHome.label = event.result.jobs.more_jobs_text;
+	setWordsAndLinks(event.result.jobs);
 
 	// get the type of item (vertical or horizontal)
 	if(stage != null && stage.width > 200) {
@@ -77,53 +50,46 @@ private function onDataResponse(event:ResultEvent):void {
 
 	if(event.result.jobs.job == null) {
 		showNoRecord();
-	} else if(event.result.jobs.job is ArrayCollection) {
-		// add property to job object
-		for each (var j:Object in event.result.jobs.job as ArrayCollection) {
-			if(j.image_widget_path == "missing.jpg") {
-				j.imageWidth = "0";
-				j.imageHeight = "0";
-				j.itemHeight = itemHeight;
-				imageVisibility = false;
-			} else {
-				j.imageWidth = imageWidth;
-				j.imageHeight = imageHeight;
-				j.itemHeight = 120;
-				imageVisibility = true;
-			}
-trace(j.itemHeight);
-			j.wordColor = ContentWordColor;
-			j.miniWidth = miniWidth;
-			j.wordWidth = wordWidth;
-			j.imageVisibility = imageVisibility;
-			new_jobs.addItem(j);
+	} else if(event.result.jobs.job is ArrayCollection) { // add property to job object		
+		for each (var j:Object in event.result.jobs.job as ArrayCollection) {			
+			jobs.addItem(buildJob(j));
 		}
-	} else if(event.result.jobs.job != null) {
-		var jj:Object = event.result.jobs.job;
-		if(j.image_widget_path == "missing.jpg") {
-			jj.imageWidth = "0";
-			jj.imageHeight = "0";
-			jj.itemHeight = itemHeight;
-			imageVisibility = false;
-		} else {
-			jj.imageWidth = imageWidth;
-			jj.imageHeight = imageHeight;
-			jj.itemHeight = 120;			
-			imageVisibility = true;
-		}
-		jj.wordColor = ContentWordColor;
-		jj.miniWidth = miniWidth;
-		jj.wordWidth = wordWidth;
-		jj.imageVisibility = imageVisibility;
-		new_jobs.addItem(jj);
+	} else if(event.result.jobs.job != null) {		
+		jobs.addItem(buildJob(event.result.jobs.job));
 	}
 
-	jobs = new_jobs;				
 	loadingBar.visible = false;
+}
+
+private function buildJob(job:Object):Object {
+	if(job.image_widget_path == "missing.jpg") {
+		job.imageWidth = "0";
+		job.imageHeight = "0";
+		job.itemHeight = itemHeight;
+		imageVisibility = false;
+	} else {
+		job.imageWidth = imageWidth;
+		job.imageHeight = imageHeight;
+		job.itemHeight = 120;
+		imageVisibility = true;
+	}
+
+	job.wordColor = ContentWordColor;
+	job.miniWidth = miniWidth;
+	job.wordWidth = wordWidth;
+	job.imageVisibility = imageVisibility;
+	
+	return job;
+}
+
+private function onDataFault(event:FaultEvent):void {
+	Alert.show(event.fault.faultString.toString(),"Widget Error!");
 }
 
 private function measureVerticalItemSize():void {
 	trace("vertical");
+	
+	jobList.itemRenderer = new ClassFactory(VerticalItem);
 	jobList.columnCount = 1;
 	jobList.columnWidth = stage.width - 5;
 
@@ -140,7 +106,10 @@ private function measureVerticalItemSize():void {
 }
 
 private function measureHorizontalItemSize():void {	
-	trace("horizontal");		
+	trace("horizontal");
+
+	jobList.itemRenderer = new ClassFactory(HorizontalItem);
+	
 	// decide the column count and width
 	if(stage.width > miniWidth && stage.width < 560) {
 		jobList.columnWidth = stage.width - 5;
@@ -168,8 +137,34 @@ private function measureHorizontalItemSize():void {
 
 
 
+// set title word and link address
+private function setWordsAndLinks(config:Object):void {
+	jobletHomeURL = config.link_to_home;
+	title.text = config.job_board_name;
+	noRecord.text = config.no_record_text;
+	linkToHome.label = config.more_jobs_text;
+}
 
+// set colors which get from xml
+private function setColor():void {
+	if(params.frame_color != null) {
+		FrameColor = params.frame_color;
+		TitleWordColor = params.title_color;
+		ContentBgColor = params.content_bg_color;
+		ContentWordColor = params.content_color;
+	}
 
+	titleFrame.setStyle("backgroundColor", FrameColor);
+	title.setStyle("color", TitleWordColor);
+	jobList.setStyle("backgroundColor", ContentBgColor);
+	footFrame.setStyle("backgroundColor", ContentBgColor);
+	footFrame.setStyle("color", ContentWordColor);
+//	upArrow.setStyle("color", ContentWordColor);
+//	downArrow.setStyle("color", ContentWordColor);
+	this.setStyle("borderColor", FrameColor);
+}
+
+// show no record words
 private function showNoRecord():void {
 	if(stage != null) {
 		noRecord.setStyle("left", stage.width/2 - noRecord.width);
@@ -178,21 +173,17 @@ private function showNoRecord():void {
 	}
 }
 
+// goto joblet home page
 private function gotoJobletHome(event:MouseEvent):void {
 	if(jobletHomeURL != "") {
 		navigateToURL( new URLRequest( jobletHomeURL ), "_self" );
 	}
 }
 
-private function onDataFault(event:FaultEvent):void {
-	Alert.show(event.fault.faultString.toString(),"Widget Error!");
-}
-
 // page up and page down
 private function pageUp(event:MouseEvent):void {
 	if( (jobList.verticalScrollPosition - jobList.rowCount) <= 0 ) {
 		jobList.verticalScrollPosition =  0;
-		showFlashWord("Already First Page!");
 	} else {
 		jobList.verticalScrollPosition -= jobList.rowCount;
 	}
@@ -201,12 +192,7 @@ private function pageUp(event:MouseEvent):void {
 private function pageDown(event:MouseEvent):void {
 	if( (jobList.verticalScrollPosition + jobList.rowCount) > jobList.maxVerticalScrollPosition ) {
 		jobList.verticalScrollPosition = jobList.maxVerticalScrollPosition;
-		showFlashWord("Already Last Page!");
 	} else {
 		jobList.verticalScrollPosition += jobList.rowCount;
 	}
-}
-
-private function showFlashWord(str:String):void {
-//	loadingBar.visible = true;
 }

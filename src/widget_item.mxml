@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	height="80"
+	height="90"
     verticalScrollPolicy="off"
     horizontalScrollPolicy="off">
 
@@ -19,11 +19,15 @@
 	<mx:HBox width="100%">
 		<mx:Image id="jobImage" click="gotoCompany(event)" width="{data.imageWidth}" visible="{data.imageVisibility}" source="{data.image_widget_path}"/>
 		<mx:VBox id="rightColumn" verticalGap="0">
-			<mx:LinkButton id="jobTitle"
+			<mx:Text id="jobTitle"
 			    width="{data.wordWidth}"
 				click="gotoJob(event)"
 			    textAlign="left"
-			    label="{data.title}"
+			    text="{data.title}"
+			    height="40"
+			    useHandCursor="true"
+			    buttonMode="true"
+          		mouseChildren="false"
 			    color="{data.wordColor}"
 				styleName="htmlLinkHover"/>
 			<mx:Label id="jobSalary"

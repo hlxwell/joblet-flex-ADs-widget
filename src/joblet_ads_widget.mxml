@@ -5,7 +5,7 @@
 	xmlns:local="*"
     backgroundColor="#ffffff"
     backgroundGradientColors="#ffffff, #ffffff"
-	borderThickness="1" 
+	borderThickness="1"
 	borderColor="#000000"
 	borderStyle="solid"
     verticalScrollPolicy="off" 
@@ -60,7 +60,7 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.collections.ArrayCollection;
 			import mx.rpc.events.ResultEvent;
-			
+
 			[Bindable]
             private var jobs:ArrayCollection = new ArrayCollection();
 
@@ -150,7 +150,7 @@
 					}
 
 					// decide the row count
-					jobList.rowCount = (stage.height - 55) / 85;
+					jobList.rowCount = (stage.height - 55) / 95;
 				}
 
 				if(event.result.jobs.job == null) {
@@ -158,20 +158,28 @@
 				} else if(event.result.jobs.job is ArrayCollection) {
 					// add property to job object
 					for each (var j:Object in event.result.jobs.job as ArrayCollection) {
+						if(j.image_widget_path == "missing.jpg") {
+							j.imageVisibility = false;
+						} else {
+							j.imageVisibility = imageVisibility;						
+						}
 						j.wordColor = ContentWordColor;
 						j.miniWidth = miniWidth;
 						j.wordWidth = wordWidth;
 						j.imageWidth = imageWidth;
-						j.imageVisibility = imageVisibility;
 						new_jobs.addItem(j);
 					}
 				} else if(event.result.jobs.job != null) {
 					var jj:Object = event.result.jobs.job;
+					if(jj.image_widget_path == "missing.jpg") {
+						jj.imageVisibility = false;
+					} else {
+						jj.imageVisibility = imageVisibility;						
+					}
 					jj.wordColor = ContentWordColor;
 					jj.miniWidth = miniWidth;
 					jj.wordWidth = wordWidth;
-					jj.imageWidth = imageWidth;
-					jj.imageVisibility = imageVisibility;
+					jj.imageWidth = imageWidth;				
 					new_jobs.addItem(jj);
 				}
 

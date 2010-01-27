@@ -3,6 +3,7 @@
 	layout="absolute"
     creationComplete="onLoad(event)"
 	xmlns:local="*"
+	width="250"
     backgroundColor="#ffffff"
     backgroundGradientColors="#ffffff, #ffffff"
 	borderThickness="1" 

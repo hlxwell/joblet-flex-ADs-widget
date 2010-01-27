@@ -1,4 +1,5 @@
-import flash.display.DisplayObject;
+import ItemHorizontal;
+import ItemVertical;
 
 import mx.collections.ArrayCollection;
 import mx.containers.VBox;
@@ -34,7 +35,7 @@ private function sendRequest():void {
     request_params.limit = '100';
     jobService.url = params.service_url;
 
-	jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
+//	jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
 //	jobService.url = "http://localhost:3000/blogs/1/ja/jobs.xml";
     jobService.send(request_params);
 }
@@ -60,16 +61,7 @@ private function onDataResponse(event:ResultEvent):void {
 		jobs.addItem(buildJob(event.result.jobs.job));
 	}
 
-//	for(var i:int = 0; i < jobs.length; i ++) {
-//		jobs[i].itemHeight = maxItemHeight;
-//	}
-
-
-///////////////
-bindTestList();
-
-
-
+	bindDataToList();
 	loadingBar.visible = false;
 }
 
@@ -77,10 +69,9 @@ private function onDataFault(event:FaultEvent):void {
 	Alert.show(event.fault.faultString.toString(),"Widget Error!");
 }
 
-private function bindTestList():void {
+private function bindDataToList():void {
 	var item:VBox;
 	for each (var job:Object in jobs) {
-		
 		if(displayMode == "v") {
 			item = new ItemVertical();
 		} else {
@@ -88,7 +79,7 @@ private function bindTestList():void {
 		}
 
 		item.data = job;
-		testList.addChild(item);
+		jobList.addChild(item);
 	}
 }
 
@@ -120,11 +111,7 @@ private function buildJob(job:Object):Object {
 		job.itemHeight = itemHeight;
 		imageVisibility = false;
 	}
-	
 
-//	if(itemHeight > maxItemHeight) {
-//		maxItemHeight = itemHeight;
-//	}
 	job.wordColor = ContentWordColor;
 	job.miniWidth = miniWidth;
 	job.wordWidth = wordWidth;
@@ -133,69 +120,31 @@ private function buildJob(job:Object):Object {
 	return job;
 }
 
-
-
 private function measureVerticalItemSize():void {
 	trace("vertical");
 	displayMode = "v";
-
-	jobList.itemRenderer = new ClassFactory(ItemVertical); //VerticalItem
-	jobList.columnCount = 1;
-	jobList.columnWidth = stage.width - 5;
-
-	miniWidth = jobList.columnWidth;
+	miniWidth = stage.width - 5;
 	wordWidth = miniWidth * 0.9;
-
 	imageWidth = "100%";
 	imageHeight = "40";
-
-	// decide the row count	
-//	if(displayMode == "h") {
-//		jobList.rowCount = (stage.height - 55) / 100;
-//	}
 }
-
 
 private function measureHorizontalItemSize():void {	
 	trace("horizontal");
 	displayMode = "h";
+	miniWidth = stage.width - 5;	
 
-	jobList.itemRenderer = new ClassFactory(ItemHorizontal); // HorizontalItem
-	
-	// decide the column count and width
-	if(stage.width > miniWidth && stage.width < 560) {
-		jobList.columnWidth = stage.width - 10;
-		jobList.columnCount = 1;
-	} else if(stage.width >= 560 && stage.width < 840) {
-		jobList.columnWidth = stage.width/2 - 10;
-		jobList.columnCount = 2;
-	} else if(stage.width <= miniWidth) {						
-		jobList.columnWidth = miniWidth - 10;
-		jobList.columnCount = 1;
-	} else if(stage.width >= 840) {
-		jobList.columnWidth = stage.width/3 - 10;
-		jobList.columnCount = 3;
+	if((miniWidth * 0.3) > 80) {
+		imageWidth = "80";
+		wordWidth = miniWidth - 100;
+	} else {
+		imageWidth = (miniWidth * 0.3).toString();
+		wordWidth = miniWidth * 0.6;
 	}
-
-	miniWidth = jobList.columnWidth;
-	wordWidth = miniWidth * 0.6;
-
-	imageWidth = (miniWidth * 0.3).toString();
-	imageHeight = "100%";
 	
-	// decide the row count	
-//	if(displayMode == "h") {
-//		jobList.rowCount = (stage.height - 55) / 100;
-//	}
+	trace(imageWidth);
+	imageHeight = "100%";
 }
-
-
-
-
-
-
-
-
 
 // set title word and link address
 private function setWordsAndLinks(config:Object):void {
@@ -237,22 +186,5 @@ private function showNoRecord():void {
 private function gotoJobletHome(event:MouseEvent):void {
 	if(jobletHomeURL != "") {
 		navigateToURL( new URLRequest( jobletHomeURL ), "_self" );
-	}
-}
-
-// page up and page down
-private function pageUp(event:MouseEvent):void {
-	if( (jobList.verticalScrollPosition - jobList.rowCount) <= 0 ) {
-		jobList.verticalScrollPosition =  0;
-	} else {
-		jobList.verticalScrollPosition -= jobList.rowCount;
-	}
-}
-
-private function pageDown(event:MouseEvent):void {
-	if( (jobList.verticalScrollPosition + jobList.rowCount) > jobList.maxVerticalScrollPosition ) {
-		jobList.verticalScrollPosition = jobList.maxVerticalScrollPosition;
-	} else {
-		jobList.verticalScrollPosition += jobList.rowCount;
 	}
 }

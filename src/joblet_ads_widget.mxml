@@ -26,19 +26,7 @@
 			<mx:Label id="title" text="Job Board" styleName="title" paddingLeft="10" paddingTop="2"/>
 		</mx:VBox>
 
-		<mx:TileList id="jobList"
-			dataProvider="{jobs}" 
-			selectable="false"
-			width="100%"
-			height="0"
-		    direction="horizontal"
-		    columnWidth="150"
-		    borderThickness="0"
-		    verticalScrollPolicy="auto"
-		    horizontalScrollPolicy="off" visible="false">
-		</mx:TileList>
-
-		<mx:VBox id="testList" 
+		<mx:VBox id="jobList" 
 			verticalScrollPolicy="auto"
 		    horizontalScrollPolicy="off"
 			width="100%" 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+    verticalScrollPolicy="off"
+    horizontalScrollPolicy="off"
+    verticalGap="0">
+
+	<mx:Script>
+		<![CDATA[
+			private function gotoCompany(event:Event):void {
+				navigateToURL( new URLRequest( data.link_to_company ), "_self" );
+			}
+
+			private function gotoJob(event:Event):void {
+				navigateToURL( new URLRequest( data.link_to_job ), "_self" );
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Image id="jobImage" 
+		click="gotoCompany(event)"
+		width="{data.imageWidth}"
+		height="{data.imageHeight}"
+		visible="{data.imageVisibility}" 
+		source="{data.image_widget_path}"/>
+
+	<mx:Text id="jobTitle"
+	    width="{data.wordWidth}"
+		click="gotoJob(event)"
+	    textAlign="left"
+	    htmlText="{data.title}"
+	    color="{data.wordColor}"
+		useHandCursor="true" 
+		buttonMode="true"
+        mouseChildren="false"
+        styleName="htmlLinkHover"/>
+	<mx:Label id="jobSalary"
+		width="{data.wordWidth}" 
+		color="{data.wordColor}"
+	    text="{data.salary}"
+		textAlign="left"/>
+	<mx:LinkButton id="jobCompany"
+	    width="{data.wordWidth}"
+	    color="{data.wordColor}"
+		click="gotoCompany(event)"
+	    textAlign="left"
+	    label="{data.company}"
+		styleName="htmlLinkHover1"/>
+	<mx:HRule width="100%" height="1"/>
+</mx:VBox>

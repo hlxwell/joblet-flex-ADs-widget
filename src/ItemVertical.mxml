@@ -22,8 +22,11 @@
 		width="{data.imageWidth}"
 		height="{data.imageHeight}"
 		visible="{data.imageVisibility}" 
-		source="{data.image_widget_path}"/>
-
+		source="{data.image_widget_path}"
+		useHandCursor="true" 
+		buttonMode="true"
+	    mouseChildren="false"/>
+	    
 	<mx:Text id="jobTitle"
 	    width="{data.wordWidth}"
 		click="gotoJob(event)"

@@ -23,7 +23,10 @@
 			width="{data.imageWidth}" 
 			height="{data.imageHeight}"
 			visible="{data.imageVisibility}"
-			source="{data.image_widget_path}"/>
+			source="{data.image_widget_path}"
+			useHandCursor="true" 
+			buttonMode="true"
+		    mouseChildren="false"/>
 
 		<mx:VBox id="rightColumn" verticalGap="0">
 			<mx:Text id="jobTitle"

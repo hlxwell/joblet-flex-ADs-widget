@@ -1,4 +1,7 @@
+import flash.display.DisplayObject;
+
 import mx.collections.ArrayCollection;
+import mx.containers.VBox;
 import mx.controls.Alert;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
@@ -41,7 +44,7 @@ private function onDataResponse(event:ResultEvent):void {
 	setWordsAndLinks(event.result.jobs);
 
 	// get the type of item (vertical or horizontal)
-	if(stage != null && stage.width > 250) {
+	if(stage != null && stage.width > 200) {
 		measureHorizontalItemSize();
 	} else {
 		measureVerticalItemSize();
@@ -57,9 +60,15 @@ private function onDataResponse(event:ResultEvent):void {
 		jobs.addItem(buildJob(event.result.jobs.job));
 	}
 
-	for(var i:int = 0; i < jobs.length; i ++) {
-		jobs[i].itemHeight = maxItemHeight;
-	}
+//	for(var i:int = 0; i < jobs.length; i ++) {
+//		jobs[i].itemHeight = maxItemHeight;
+//	}
+
+
+///////////////
+bindTestList();
+
+
 
 	loadingBar.visible = false;
 }
@@ -68,7 +77,20 @@ private function onDataFault(event:FaultEvent):void {
 	Alert.show(event.fault.faultString.toString(),"Widget Error!");
 }
 
+private function bindTestList():void {
+	var item:VBox;
+	for each (var job:Object in jobs) {
+		
+		if(displayMode == "v") {
+			item = new ItemVertical();
+		} else {
+			item = new ItemHorizontal();
+		}
 
+		item.data = job;
+		testList.addChild(item);
+	}
+}
 
 private function buildJob(job:Object):Object {
 	var hasPicture:Boolean = (job.image_widget_path != "missing.jpg");
@@ -98,9 +120,11 @@ private function buildJob(job:Object):Object {
 		job.itemHeight = itemHeight;
 		imageVisibility = false;
 	}
-	if(itemHeight > maxItemHeight) {
-		maxItemHeight = itemHeight;
-	}
+	
+
+//	if(itemHeight > maxItemHeight) {
+//		maxItemHeight = itemHeight;
+//	}
 	job.wordColor = ContentWordColor;
 	job.miniWidth = miniWidth;
 	job.wordWidth = wordWidth;
@@ -115,7 +139,7 @@ private function measureVerticalItemSize():void {
 	trace("vertical");
 	displayMode = "v";
 
-	jobList.itemRenderer = new ClassFactory(item_vertical); //VerticalItem
+	jobList.itemRenderer = new ClassFactory(ItemVertical); //VerticalItem
 	jobList.columnCount = 1;
 	jobList.columnWidth = stage.width - 5;
 
@@ -136,7 +160,7 @@ private function measureHorizontalItemSize():void {
 	trace("horizontal");
 	displayMode = "h";
 
-	jobList.itemRenderer = new ClassFactory(item_horizontal); // HorizontalItem
+	jobList.itemRenderer = new ClassFactory(ItemHorizontal); // HorizontalItem
 	
 	// decide the column count and width
 	if(stage.width > miniWidth && stage.width < 560) {

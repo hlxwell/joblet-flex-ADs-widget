@@ -3,7 +3,6 @@
 	layout="absolute"
     creationComplete="onLoad(event)"
 	xmlns:local="*"
-	width="250"
     backgroundColor="#ffffff"
     backgroundGradientColors="#ffffff, #ffffff"
 	borderThickness="1" 
@@ -31,14 +30,20 @@
 			dataProvider="{jobs}" 
 			selectable="false"
 			width="100%"
-			height="100%"
+			height="0"
 		    direction="horizontal"
 		    columnWidth="150"
 		    borderThickness="0"
 		    verticalScrollPolicy="auto"
-		    horizontalScrollPolicy="off">
+		    horizontalScrollPolicy="off" visible="false">
 		</mx:TileList>
 
+		<mx:VBox id="testList" 
+			verticalScrollPolicy="auto"
+		    horizontalScrollPolicy="off"
+			width="100%" 
+			height="{this.height - 60}"/>
+		
 		<mx:VBox id="footFrame" width="100%" verticalAlign="bottom">
 			<mx:LinkButton id="linkToHome"
 				label="See all jobs"

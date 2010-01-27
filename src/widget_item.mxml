@@ -7,11 +7,15 @@
 	<mx:Script>
 		<![CDATA[
 			private function gotoCompany(event:Event):void {
-				navigateToURL( new URLRequest( data.link_to_company ), "_self" );
+				gotoUrl(data.link_to_company);
 			}
 
 			private function gotoJob(event:Event):void {
-				navigateToURL( new URLRequest( data.link_to_job ), "_self" );
+				gotoUrl(data.link_to_job);
+			}
+			
+			private function gotoUrl(url:String):void {
+			  ExternalInterface.call("window.open", url, "_self");
 			}
 		]]>
 	</mx:Script>
@@ -19,13 +23,16 @@
 	<mx:HBox width="100%">
 		<mx:Image id="jobImage" click="gotoCompany(event)" width="{data.imageWidth}" visible="{data.imageVisibility}" source="{data.image_widget_path}"/>
 		<mx:VBox id="rightColumn" verticalGap="0">
-			<mx:LinkButton id="jobTitle"
+			<mx:Text id="jobTitle"
 			    width="{data.wordWidth}"
 				click="gotoJob(event)"
 			    textAlign="left"
-			    label="{data.title}"
+			    htmlText="{data.title}"
 			    color="{data.wordColor}"
-				styleName="htmlLinkHover"/>
+				useHandCursor="true"
+				buttonMode="true"
+		        mouseChildren="false"
+		        styleName="htmlLinkHover"/>
 			<mx:Label id="jobSalary"
 				width="{data.wordWidth}" 
 				color="{data.wordColor}"

@@ -60,6 +60,7 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.collections.ArrayCollection;
 			import mx.rpc.events.ResultEvent;
+			import flash.external.*;
 			
 			[Bindable]
             private var jobs:ArrayCollection = new ArrayCollection();
@@ -189,7 +190,7 @@
 			
 			private function gotoJobletHome(event:MouseEvent):void {
 				if(jobletHomeURL != "") {
-					navigateToURL( new URLRequest( jobletHomeURL ), "_self" );
+					gotoUrl(jobletHomeURL);
 				}
 			}
 			
@@ -201,7 +202,6 @@
 			private function pageUp(event:MouseEvent):void {
 				if( (jobList.verticalScrollPosition - jobList.rowCount) <= 0 ) {
 					jobList.verticalScrollPosition =  0;
-					showFlashWord("Already First Page!");
 				} else {
 					jobList.verticalScrollPosition -= jobList.rowCount;
 				}
@@ -210,14 +210,13 @@
 			private function pageDown(event:MouseEvent):void {
 				if( (jobList.verticalScrollPosition + jobList.rowCount) > jobList.maxVerticalScrollPosition ) {
 					jobList.verticalScrollPosition = jobList.maxVerticalScrollPosition;
-					showFlashWord("Already Last Page!");
 				} else {
 					jobList.verticalScrollPosition += jobList.rowCount;
 				}
 			}
 			
-			private function showFlashWord(str:String):void {
-//				loadingBar.visible = true;
+			private function gotoUrl(url:String):void {
+				ExternalInterface.call("window.open", url, "_self");
 			}
 		]]>
 	</mx:Script>

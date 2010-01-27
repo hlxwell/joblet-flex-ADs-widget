@@ -18,7 +18,8 @@
 	</mx:Script>
 
 	<mx:HBox width="100%">
-		<mx:Image id="jobImage" 
+		<mx:Image id="jobImage"
+		    horizontalAlign="center"
 			click="gotoCompany(event)" 
 			width="{data.imageWidth}" 
 			height="{data.imageHeight}"

@@ -1,5 +1,4 @@
-import ItemHorizontal;
-import ItemVertical;
+import item.*;
 
 import mx.collections.ArrayCollection;
 import mx.containers.VBox;
@@ -7,9 +6,7 @@ import mx.controls.Alert;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
-[Bindable]
 private var jobs:ArrayCollection = new ArrayCollection();
-
 private var jobletHomeURL:String = "";
 private var FrameColor:String = "#000000";
 private var TitleWordColor:String = "#ffffff";
@@ -18,11 +15,9 @@ private var ContentWordColor:String = "#000000";
 private var miniWidth:int = 150;
 private var wordWidth:int = 100;
 private var imageWidth:String = "100%";
-private var imageHeight:String = "100%";
-private var imageVisibility:Boolean = true;			
+private var imageHeight:String = "100%";	
 private var params:Object = null;
 private var displayMode:String = "v";
-private var maxItemHeight:int = 80;
 
 private function onLoad(event:Event):void {
 	params = Application.application.parameters;
@@ -32,7 +27,7 @@ private function onLoad(event:Event):void {
 
 private function sendRequest():void {
 	var request_params:Object = new Object();
-    request_params.limit = '100';
+    request_params.limit = '20';
     jobService.url = params.service_url;
 
 //	jobService.url = "http://staging.joblet.theplant-dev.com/blogs/1/en/jobs.xml";
@@ -41,6 +36,8 @@ private function sendRequest():void {
 }
 
 private function onDataResponse(event:ResultEvent):void {
+	miniWidth = stage.width - 5;
+	
 	// set home link and title words
 	setWordsAndLinks(event.result.jobs);
 
@@ -70,70 +67,48 @@ private function onDataFault(event:FaultEvent):void {
 }
 
 private function bindDataToList():void {
-	var item:VBox;
+	var listItem:VBox;
 	for each (var job:Object in jobs) {
 		if(displayMode == "v") {
-			item = new ItemVertical();
+			listItem = new ItemVertical();
 		} else {
-			item = new ItemHorizontal();
+			listItem = new ItemHorizontal();
 		}
 
-		item.data = job;
-		jobList.addChild(item);
+		listItem.data = job;
+		jobList.addChild(listItem);
 	}
 }
 
 private function buildJob(job:Object):Object {
 	var hasPicture:Boolean = (job.image_widget_path != "missing.jpg");
-	var titleRowCount:int = 1;
-	var itemHeight:int = 80;
-	var imgHeight:int = parseInt(imageHeight);
-	var titleRowHeight:int = 10;
-	if(displayMode == "h") {
-		imgHeight = 0;
-	} else {
-		imgHeight = parseInt(imageHeight);
-	}
-
-	// total width - scrollbar / width
-	titleRowCount = Math.ceil(job.title.toString().length * 16/stage.width);
 
 	if(hasPicture) {
-		itemHeight = titleRowCount * titleRowHeight + 70 + imgHeight;
 		job.imageWidth = imageWidth;
 		job.imageHeight = imageHeight;
-		job.itemHeight = itemHeight;
-		imageVisibility = true;
+		job.imageVisibility = true;
 	} else {
-		itemHeight = titleRowCount * titleRowHeight + 70;
-		job.imageWidth = "0";
+		job.imageWidth = imageWidth;
 		job.imageHeight = "0";
-		job.itemHeight = itemHeight;
-		imageVisibility = false;
+		job.imageVisibility = false;
 	}
 
 	job.wordColor = ContentWordColor;
 	job.miniWidth = miniWidth;
 	job.wordWidth = wordWidth;
-	job.imageVisibility = imageVisibility;
 
 	return job;
 }
 
 private function measureVerticalItemSize():void {
-	trace("vertical");
 	displayMode = "v";
-	miniWidth = stage.width - 5;
 	wordWidth = miniWidth * 0.9;
 	imageWidth = "100%";
-	imageHeight = "40";
+	imageHeight = "100%";
 }
 
 private function measureHorizontalItemSize():void {	
-	trace("horizontal");
 	displayMode = "h";
-	miniWidth = stage.width - 5;	
-
 	if((miniWidth * 0.3) > 80) {
 		imageWidth = "80";
 		wordWidth = miniWidth - 100;
@@ -141,8 +116,6 @@ private function measureHorizontalItemSize():void {
 		imageWidth = (miniWidth * 0.3).toString();
 		wordWidth = miniWidth * 0.6;
 	}
-	
-	trace(imageWidth);
 	imageHeight = "100%";
 }
 
@@ -168,8 +141,6 @@ private function setColor():void {
 	jobList.setStyle("backgroundColor", ContentBgColor);
 	footFrame.setStyle("backgroundColor", ContentBgColor);
 	footFrame.setStyle("color", ContentWordColor);
-//	upArrow.setStyle("color", ContentWordColor);
-//	downArrow.setStyle("color", ContentWordColor);
 	this.setStyle("borderColor", FrameColor);
 }
 

@@ -3,10 +3,17 @@
 	width="100%"
     verticalScrollPolicy="off"
     horizontalScrollPolicy="off"
-    verticalGap="0">
+    verticalGap="0"
+    creationComplete="init(event)">
 
 	<mx:Script>
 		<![CDATA[
+			public function init(event:Event):void {
+				jobTitle.setStyle("color", data.wordColor);
+				jobSalary.setStyle("color", data.wordColor);
+				jobCompany.setStyle("color", data.wordColor);
+			}
+			
 			private function gotoCompany(event:Event):void {
 				navigateToURL( new URLRequest( data.link_to_company ), "_self" );
 			}
@@ -17,17 +24,19 @@
 		]]>
 	</mx:Script>
 
-	<mx:Image id="jobImage" 
-		click="gotoCompany(event)"
-		width="{data.imageWidth}"
-		height="{data.imageHeight}"
-		visible="{data.imageVisibility}" 
-		source="{data.image_widget_path}"
-		useHandCursor="true" 
-		buttonMode="true"
-	    mouseChildren="false"/>
-	    
-	<mx:Text id="jobTitle"
+	<mx:VBox paddingBottom="5" paddingTop="5" paddingLeft="10" width="100%">
+		<mx:Image id="jobImage"
+			click="gotoCompany(event)"
+			width="{data.imageWidth}"
+			height="{data.imageHeight}"
+			visible="{data.imageVisibility}" 
+			source="{data.image_widget_path}"
+			useHandCursor="true" 
+			buttonMode="true"
+		    mouseChildren="false"/>
+	</mx:VBox>
+		
+	<mx:Text id="jobTitle" paddingLeft="10" paddingRight="10"
 	    width="{data.wordWidth}"
 		click="gotoJob(event)"
 	    textAlign="left"
@@ -37,12 +46,12 @@
 		buttonMode="true"
         mouseChildren="false"
         styleName="htmlLinkHover"/>
-	<mx:Label id="jobSalary"
+	<mx:Label id="jobSalary" paddingLeft="10" paddingRight="10"
 		width="{data.wordWidth}" 
 		color="{data.wordColor}"
 	    text="{data.salary}"
 		textAlign="left"/>
-	<mx:LinkButton id="jobCompany"
+	<mx:LinkButton id="jobCompany" paddingLeft="10" paddingRight="10" paddingBottom="10"
 	    width="{data.wordWidth}"
 	    color="{data.wordColor}"
 		click="gotoCompany(event)"

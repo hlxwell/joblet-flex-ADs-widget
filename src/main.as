@@ -102,7 +102,7 @@ private function buildJob(job:Object):Object {
 
 private function measureVerticalItemSize():void {
 	displayMode = "v";
-	wordWidth = miniWidth * 0.9;
+	wordWidth = miniWidth * 0.9; // 90% width of widget
 	imageWidth = "100%";
 	imageHeight = "100%";
 }
@@ -111,7 +111,7 @@ private function measureHorizontalItemSize():void {
 	displayMode = "h";
 	if((miniWidth * 0.3) > 80) {
 		imageWidth = "80";
-		wordWidth = miniWidth - 100;
+		wordWidth = miniWidth - 100; // maximum image width is 80px
 	} else {
 		imageWidth = (miniWidth * 0.3).toString();
 		wordWidth = miniWidth * 0.6;
